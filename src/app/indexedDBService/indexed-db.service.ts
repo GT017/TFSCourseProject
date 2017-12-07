@@ -39,6 +39,7 @@ export class IndexedDBService {
     return dbConnection.then((db: IDBDatabase) => new Promise((resolve, reject) => {
       let transaction = db.transaction([dbStoreName], 'readonly');
       let store = transaction.objectStore(dbStoreName);
+      const data = store.get(dataKey);
 
       data.onerror = (err) => {
         console.log('DB: cannot get data');
