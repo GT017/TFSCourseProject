@@ -1,0 +1,105 @@
+<div class="jumbotron">
+  <div class="container">
+    <h1>5&nbsp;day weather forecast</h1>
+  </div>
+</div>
+
+<div class="container">
+
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="city-input">Enter your city name</label>
+      <input type="text"
+             pattern="[A-Za-z]{3,}"
+             class="form-control"
+             id="city-input"
+             formControlName="title"
+             placeholder="Your city name"
+             (keyup)="onCityNameKeyUp($event)">
+      <div class="invalid-feedback">
+        {{form.get('title').errors && getErrors(form.get('title').errors)}}
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="days-input">Enter the number of days
+      </label>
+      <input type="text"
+             class="form-control"
+             id="days-input"
+             formControlName="days"
+             placeholder="From 2 to 5 days"
+             (keyup)="onDaysKeyUp($event)">
+      <div class="invalid-feedback">
+        {{form.get('days').errors && getErrors(form.get('days').errors)}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="day-properties">Select data:</label>
+      <div class="list-group" id="day-properties" >
+        <button type="button"
+                class="list-group-item"
+                [ngClass]="{'checked': isHumidityChecked}"
+                (click)="togglePropertyChecked('isHumidityChecked')">
+          Humidity
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isPressureChecked}"
+                (click)="togglePropertyChecked('isPressureChecked')">
+         Pressure
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isTempChecked}"
+                (click)="togglePropertyChecked('isTempChecked')">
+          Current temperature
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isTempMaxChecked}"
+                (click)="togglePropertyChecked('isTempMaxChecked')">
+          Maximum daily temperature
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isTempMinChecked}"
+                (click)="togglePropertyChecked('isTempMinChecked')">
+          Minimum daily temperature
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isWindDirChecked}"
+                (click)="togglePropertyChecked('isWindDirChecked')">
+          Wind direction
+        </button>
+        <button type="button"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{'checked': isWindSpChecked}"
+                (click)="togglePropertyChecked('isWindSpChecked')">
+          Wind speed
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit"
+              class="btn btn-primary btn-block"
+              [disabled]="form.pristine || form.invalid"
+              (click)="onClick()">Get forecast</button>
+    </div>
+  </form>
+</div>
+<div class="container" *ngIf="weatherDayData">
+  <div>
+    <h3>Results:</h3>
+  </div>
+  <div class="card-group">
+    <app-weather-day-forecast
+      *ngFor="let weatherDay of weatherDayData"
+      [cityName]="cityName"
+      [weatherDay]="weatherDay"></app-weather-day-forecast>
+  </div>
+</div>

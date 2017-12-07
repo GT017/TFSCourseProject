@@ -1,0 +1,37 @@
+<div class="navigation">
+  <nav class="navbar navbar-expand-md navbar-fixed-top navbar-dark bg-dark mr mr-auto">
+    <!--<div class="navbar-header">-->
+      <a routerLink="" class="navbar-brand">
+        <img src="http://lh3.googleusercontent.com/1NWSffUULql2uPj0hT_WTwSTfmUv0yuXk0Rq0Q6tpcUZbMurPESyK8W2NBqpa8SRpA=w300">
+      </a>
+    <!--</div>-->
+
+    <button class="navbar-toggler navbar-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav mr-auto">
+        <li>
+          <a routerLink="" class="nav-link">Home</a>
+        </li>
+        <li>
+          <a routerLink="/day" class="nav-link">5 day weather forecast</a>
+        </li>
+        <li>
+          <a routerLink="/week" class="nav-link">16 day weather forecast</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+<hr>
+<footer>
+
+</footer>

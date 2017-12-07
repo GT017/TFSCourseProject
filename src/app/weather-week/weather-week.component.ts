@@ -1,0 +1,139 @@
+import { Component, OnInit } from '@angular/core';
+import {WeatherWeekService} from './weather-week.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {WeatherWeek} from './model/weather-week';
+import {LocalStorageService} from "../localStorageService/local-storage.service";
+
+const REGEXP = /^[1]?[0-6]$/;
+
+@Component({
+  selector: 'app-weather-week',
+  templateUrl: './weather-week.component.html',
+  styleUrls: ['./weather-week.component.css']
+})
+export class WeatherWeekComponent implements OnInit {
+  form: FormGroup;
+  weatherWeekData: WeatherWeek[];
+  cityName: string;
+  days: number;
+
+  private isHumChecked = false;
+  private isPressChecked = false;
+  private isDayTempChecked = false;
+  private isNightTempChecked = false;
+  private isMaxDailyChecked = false;
+  private isMinDailyChecked = false;
+  private isMornTempChecked = false;
+  private isEveTempChecked = false;
+  private isWindDirectionChecked = false;
+  private isWindSpeedChecked = false;
+
+  constructor(private formBuilder: FormBuilder,
+              private weatherWeekService: WeatherWeekService,
+              private localStorageService: LocalStorageService) { }
+
+  getErrors(errors: any): string {
+    if (errors['required']) {
+      return 'This field is required';
+    }
+
+    if (errors['min']) {
+      return `Min value is ${errors['min']['min']}`;
+    }
+
+    if (errors['max']) {
+      return `Max value is ${errors['max']['max']}`;
+    }
+
+    if (errors['minlength']) {
+      return `Min length is ${errors['minlength']['requiredLength']}`;
+    }
+
+    if (errors['maxlength']) {
+      return `Max length is ${errors['maxlength']['requiredLength']}`;
+    }
+
+    if (errors['pattern'] && errors['pattern']['requiredPattern'] === REGEXP.toString()) {
+      return `Only numbers are allowed`;
+    }
+  }
+
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      days: ['', [Validators.required, Validators.min(2), Validators.max(16), Validators.pattern(REGEXP)]]
+    });
+
+    this.localStorageService.setItem('isHumChecked', false);
+    this.localStorageService.setItem('isPressChecked', false);
+    this.localStorageService.setItem('isDayTempChecked', false);
+    this.localStorageService.setItem('isNightTempChecked', false);
+    this.localStorageService.setItem('isMaxDailyChecked', false);
+    this.localStorageService.setItem('isMinDailyChecked', false);
+    this.localStorageService.setItem('isMornTempChecked', false);
+    this.localStorageService.setItem('isEveTempChecked', false);
+    this.localStorageService.setItem('isWindDirectionChecked', false);
+    this.localStorageService.setItem('isWindSpeedChecked', false);
+
+
+  }
+
+  onCityNameKeyUp(event) {
+    this.cityName = event.target.value;
+  }
+
+  onDaysKeyUp(event) {
+    this.days = event.target.value;
+  }
+
+  onClick() {
+    this.weatherWeekService.getWeatherWeekData(this.cityName, this.days)
+      .subscribe(results => {
+        // console.log(results.WeatherWeekService.parseWeatherWeekData());
+        console.log(results);
+      });
+  }
+
+  togglePropertyChecked(property: string) {
+    if (property === 'isHumChecked') {
+      this.isHumChecked = !this.isHumChecked;
+      this.localStorageService.setItem('isHumChecked', this.isHumChecked);
+    }
+    if (property === 'isPressChecked') {
+      this.isPressChecked = !this.isPressChecked;
+      this.localStorageService.setItem('isPressChecked', this.isPressChecked);
+    }
+    if (property === 'isDayTempChecked') {
+      this.isDayTempChecked = !this.isDayTempChecked;
+      this.localStorageService.setItem('isDayTempChecked', this.isDayTempChecked);
+    }
+    if (property === 'isNightTempChecked') {
+      this.isNightTempChecked = !this.isNightTempChecked;
+      this.localStorageService.setItem('isNightTempChecked', this.isNightTempChecked);
+    }
+    if (property === 'isMaxDailyChecked') {
+      this.isMaxDailyChecked = !this.isMaxDailyChecked;
+      this.localStorageService.setItem('isMaxDailyChecked', this.isMaxDailyChecked);
+    }
+    if (property === 'isMinDailyChecked') {
+      this.isMinDailyChecked = !this.isMinDailyChecked;
+      this.localStorageService.setItem('isMinDailyChecked', this.isMinDailyChecked);
+    }
+    if (property === 'isMornTempChecked') {
+      this.isMornTempChecked = !this.isMornTempChecked;
+      this.localStorageService.setItem('isMornTempChecked', this.isMornTempChecked);
+    }
+    if (property === 'isEveTempChecked') {
+      this.isEveTempChecked = !this.isEveTempChecked;
+      this.localStorageService.setItem('isEveTempChecked', this.isEveTempChecked);
+    }
+    if (property === 'isWindDirectionChecked') {
+      this.isWindDirectionChecked = !this.isWindDirectionChecked;
+      this.localStorageService.setItem('isWindDirectionChecked', this.isWindDirectionChecked);
+    }
+    if (property === 'isWindSpeedChecked') {
+      this.isWindSpeedChecked = !this.isWindSpeedChecked;
+      this.localStorageService.setItem('isWindSpeedChecked', this.isWindSpeedChecked);
+    }
+  }
+}

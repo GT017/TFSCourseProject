@@ -1,0 +1,27 @@
+/*@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";*/
+.navigation {
+  margin-bottom: 10px;
+}
+
+.nav-link {
+  text-decoration-color: #FFFAFA!important;
+}
+
+.navbar-nav {
+  align-items: flex-end;
+}
+
+/*.navbar-brand {
+  margin-bottom: 17px;
+  padding-top: 5px;
+
+}*/
+
+img {
+  max-width: 20%;
+  max-height: 20%;
+}
+
+footer {
+  height: 100px;
+}

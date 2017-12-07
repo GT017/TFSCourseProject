@@ -1,0 +1,19 @@
+
+  <div class="card" style="width: 20rem;">
+    <div class="card-body">
+      <div>
+        <h4 class="card-title">{{cityName}}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{weatherDay.date.toLocaleString()}}</h6>
+      </div>
+      <img src={{weatherDay.img}}>
+      <p class="card-text">Description: {{weatherDay.description}}</p>
+      <p class="card-text" *ngIf="pressureChecked">Pressure {{weatherDay.pressure}} hPa</p>
+      <p class="card-text" *ngIf="humidityChecked">Humidity: {{weatherDay.humidity}}%</p>
+      <p class="card-text" *ngIf="tempChecked">Current temperature: {{weatherDay.temp}}&#x2103;</p>
+      <p class="card-text" *ngIf="tempMaxChecked">Max daily temperature: {{weatherDay.temp_max}}&#x2103;</p>
+      <p class="card-text" *ngIf="tempMinChecked">Min daily temperature: {{weatherDay.temp_min}}&#x2103;</p>
+      <p class="card-text" *ngIf="windSpChecked">Wind speed: {{weatherDay.wind_sp}}m/s</p>
+      <p class="card-text" *ngIf="windDirChecked">Wind direction: {{weatherDay.wind_dir}}</p>
+    </div>
+  </div>
+

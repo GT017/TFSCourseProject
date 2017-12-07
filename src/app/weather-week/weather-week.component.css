@@ -1,0 +1,33 @@
+.list-group-item {
+  text-align: center;
+}
+
+.btn {
+  text-transform: uppercase;
+}
+
+.form-control.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+.form-control.ng-valid {
+  border-color: #00FF00;
+}
+
+.form-control.ng-invalid.ng-touched ~ .invalid-feedback {
+  display: block;
+}
+
+.invalid-feedback{
+  /* http://getbootstrap.com/docs/4.0/components/forms/#server-side подскажет, что делать*/
+  display: none;
+}
+
+.checked {
+  background-color: #4169E1!important;
+  color: #FFFFFF!important;
+}
+
+.jumbotron {
+  background-color: #FFFF00;
+}
