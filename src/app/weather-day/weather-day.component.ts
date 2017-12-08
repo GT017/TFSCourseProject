@@ -86,17 +86,19 @@ export class WeatherDayComponent implements OnInit {
 
         if (diffTime < 15) {
           this.weatherDayData = this.getFinalData(data['weatherData'], currTime);
+          this.httpError = '';
         } else {
           this.weatherDayService.getWeatherDayData(this.cityName).subscribe((dataFromAPI) => {
             this.indexedDBService.addDataToDB(this.cityName, dataFromAPI, currTime, 'DayForecast');
             this.weatherDayData = this.getFinalData(dataFromAPI, currTime);
+            this.httpError = '';
           },
             (err: HttpErrorResponse) => {
-            this.httpError = 'Oops! Something went wrong';
             if (err.error instanceof Error) {
               console.log('An error occurred:', err.error.message);
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+              this.httpError = `Oops! Something went wrong: ${err.error.message}`;
             }
             });
         }
@@ -106,6 +108,7 @@ export class WeatherDayComponent implements OnInit {
       this.weatherDayService.getWeatherDayData(this.cityName).subscribe((data) => {
         this.indexedDBService.addDataToDB(this.cityName, data, currTime, 'DayForecast');
         this.weatherDayData = this.getFinalData(data, currTime);
+        this.httpError = '';
       },
         (err: HttpErrorResponse) => {
           if (err.error instanceof Error) {

@@ -98,7 +98,7 @@
 <div class="container" *ngIf="weatherDayData || httpError">
   <div class="container-header">
     <h3>Results:</h3>
-    <div *ngIf="httpError">
+    <div *ngIf="httpError && !weatherData">
       <span>{{httpError}}</span>
     </div>
   </div>

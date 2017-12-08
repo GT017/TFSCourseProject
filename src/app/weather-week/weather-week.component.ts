@@ -92,13 +92,16 @@ export class WeatherWeekComponent implements OnInit {
         let diffTime = currTime.getTime() - data.requestTime.getTime();
         diffTime = Math.round(((diffTime % 86400000) % 3600000) / 60000);
 
+
         if (diffTime < 15) {
           this.weatherWeekData = this.getFinalData(data['weatherData'], this.days);
+          this.httpError = '';
         } else {
           this.weatherWeekService.getWeatherWeekData(this.cityName).subscribe((dataFromAPI) => {
               this.setDate(dataFromAPI);
               this.indexedDBService.addDataToDB(this.cityName, dataFromAPI, currTime, 'WeekForecast');
               this.weatherWeekData = this.getFinalData(dataFromAPI, this.days);
+              this.httpError = '';
             },
             (err: HttpErrorResponse) => {
               if (err.error instanceof Error) {
@@ -116,6 +119,7 @@ export class WeatherWeekComponent implements OnInit {
             this.setDate(data);
             this.indexedDBService.addDataToDB(this.cityName, data, currTime, 'WeekForecast');
             this.weatherWeekData = this.getFinalData(data, this.days);
+            this.httpError = '';
           },
           (err: HttpErrorResponse) => {
             if (err.error instanceof Error) {
