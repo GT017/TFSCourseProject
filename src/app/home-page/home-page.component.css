@@ -4,6 +4,8 @@
 
 .jumbotron {
   background-color: #FFFF00;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fiveday {

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/map';
-import {Observable} from "rxjs/Observable";
-import {WeatherDay} from "./model/weather-day";
+import {Observable} from 'rxjs/Observable';
+import {WeatherDay} from './model/weather-day';
 
 const BASE_URL = 'http://api.openweathermap.org/data/2.5/forecast?q=';
-const APP_ID = 'appid=fee0e2984791eaa2566619a32f4e75df';
+const APP_ID = 'appid=aa36300feb4595e20d3d9e6f13a169c7';
 const UNITS = 'units=metric';
-const REQUEST_TIME = 15;
+
 
 @Injectable()
 export class WeatherDayService {

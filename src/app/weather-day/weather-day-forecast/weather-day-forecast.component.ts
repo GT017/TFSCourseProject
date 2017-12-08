@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {WeatherDay} from "../model/weather-day";
 import {LocalStorageService} from '../../localStorageService/local-storage.service';
 
+
 @Component({
   selector: 'app-weather-day-forecast',
   templateUrl: './weather-day-forecast.component.html',
@@ -11,6 +12,8 @@ export class WeatherDayForecastComponent implements OnInit {
 
   @Input() cityName;
   @Input() weatherDay;
+
+  CityName = this.cityName;
 
   constructor(private localStorageService: LocalStorageService) { }
 

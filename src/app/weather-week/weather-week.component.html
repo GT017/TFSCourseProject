@@ -23,8 +23,7 @@
 
 
     <div class="form-group">
-      <label for="days-input">Enter the number of days
-      </label>
+      <label for="days-input">Enter the number of days</label>
       <input type="text"
              class="form-control"
              id="days-input"
@@ -112,11 +111,16 @@
   </form>
 </div>
 
-<div class="container" *ngIf="weatherWeekData">
-  <div>
+<hr class="breaker" *ngIf="weatherWeekData|| httpError">
+
+<div class="container" *ngIf="weatherWeekData|| httpError">
+  <div class="container-header">
     <h3>Results:</h3>
+    <div *ngIf="httpError">
+    <span>{{httpError}}</span>
   </div>
-  <div class="card-group">
+  </div>
+  <div class="card-deck" *ngIf="weatherWeekData && !httpError">
     <app-weather-week-forecast
       *ngFor="let weatherWeek of weatherWeekData"
       [cityName]="cityName"

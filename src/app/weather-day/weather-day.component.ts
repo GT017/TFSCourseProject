@@ -4,8 +4,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {WeatherDay} from './model/weather-day';
 import {LocalStorageService} from '../localStorageService/local-storage.service';
 import {IndexedDBService} from '../indexedDBService/indexed-db.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 const REGEXP = /^[1-6]$/;
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 @Component({
   selector: 'app-weather-day',
@@ -18,6 +20,7 @@ export class WeatherDayComponent implements OnInit {
   weatherDayData;
   cityName: string;
   days: number;
+  httpError: string;
 
   private isHumidityChecked = false;
   private  isPressureChecked = false;
@@ -72,48 +75,68 @@ export class WeatherDayComponent implements OnInit {
     this.localStorageService.setItem('isTempMinChecked', false);
     this.localStorageService.setItem('isWindDirChecked', false);
     this.localStorageService.setItem('isWindSpChecked', false);
-
-    // this.weatherDayService.createDB();
   }
 
   onClick() {
     const currTime = new Date();
 
-    /*this.indexedDBService.getDataFromDB(this.cityName).then((data) => {
-      console.log(data);
+    this.indexedDBService.getDataFromDB(this.cityName, 'DayForecast').then((data) => {
+        let diffTime = currTime.getTime() - data['requestTime'].getTime();
+        diffTime = Math.round(((diffTime % 86400000) % 3600000) / 60000);
+
+        if (diffTime < 15) {
+          this.weatherDayData = this.getFinalData(data['weatherData'], currTime);
+        } else {
+          this.weatherDayService.getWeatherDayData(this.cityName).subscribe((dataFromAPI) => {
+            this.indexedDBService.addDataToDB(this.cityName, dataFromAPI, currTime, 'DayForecast');
+            this.weatherDayData = this.getFinalData(dataFromAPI, currTime);
+          },
+            (err: HttpErrorResponse) => {
+            this.httpError = 'Oops! Something went wrong';
+            if (err.error instanceof Error) {
+              console.log('An error occurred:', err.error.message);
+            } else {
+              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            }
+            });
+        }
     },
       (err) => {
       console.log(err);
-      });*/
-
-
-
-    /*if (!this.indexedDBService.existsInDB(this.cityName)) {
-    this.weatherDayService.getWeatherDayData(this.cityName)
-          .subscribe(results => {
-            this.weatherDayData = results;
-            this.indexedDBService.addInDB(this.cityName, currTime, results);
-            console.log(results);
+      this.weatherDayService.getWeatherDayData(this.cityName).subscribe((data) => {
+        this.indexedDBService.addDataToDB(this.cityName, data, currTime, 'DayForecast');
+        this.weatherDayData = this.getFinalData(data, currTime);
+      },
+        (err: HttpErrorResponse) => {
+          if (err.error instanceof Error) {
+            console.log('An error occurred:', err.error.message);
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error.message}`);
+            this.httpError = `Oops! Something went wrong: ${err.error.message}`;
+          }
+        }
+        );
       });
-  } else {
-    console.log('fvjfv');
-    const dataFromDB = this.indexedDBService.getRequestData(this.cityName);
-    let diffTime = currTime.getTime() - dataFromDB.requestTime.getTime();
-    diffTime = Math.round(((diffTime % 86400000) % 3600000) / 60000);
 
-    if (diffTime < 15) {
-      this.weatherDayData = dataFromDB.weatherData;
-      this.indexedDBService.addInDB(this.cityName, currTime, results);
-    } else {
-      this.weatherDayService.getWeatherDayData(this.cityName)
-        .subscribe(results => {
-          this.weatherDayData = results;
-          this.indexedDBService.addInDB(this.cityName, currTime, results);
-          //console.log(results);
-        });
+  }
 
-    }
-  }*/
+  getFinalData(weatherData: WeatherDay[], currTime: Date) {
+    return weatherData.filter((item) => {
+      if (this.dateDiffInDays(currTime, item.date) < this.days) {
+        return item;
+      }
+      return;
+    });
+
+  }
+
+
+  dateDiffInDays(a, b) {
+
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY));
   }
 
   onCityNameKeyUp(event) {

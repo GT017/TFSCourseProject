@@ -3,8 +3,10 @@ import {WeatherWeekService} from './weather-week.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {WeatherWeek} from './model/weather-week';
 import {LocalStorageService} from "../localStorageService/local-storage.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {IndexedDBService} from "../indexedDBService/indexed-db.service";
 
-const REGEXP = /^[1]?[0-6]$/;
+const REGEXP = /^[1]?[0-9]$/;
 
 @Component({
   selector: 'app-weather-week',
@@ -16,6 +18,7 @@ export class WeatherWeekComponent implements OnInit {
   weatherWeekData: WeatherWeek[];
   cityName: string;
   days: number;
+  httpError: string;
 
   private isHumChecked = false;
   private isPressChecked = false;
@@ -30,7 +33,8 @@ export class WeatherWeekComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private weatherWeekService: WeatherWeekService,
-              private localStorageService: LocalStorageService) { }
+              private localStorageService: LocalStorageService,
+              private indexedDBService: IndexedDBService) { }
 
   getErrors(errors: any): string {
     if (errors['required']) {
@@ -74,24 +78,85 @@ export class WeatherWeekComponent implements OnInit {
     this.localStorageService.setItem('isEveTempChecked', false);
     this.localStorageService.setItem('isWindDirectionChecked', false);
     this.localStorageService.setItem('isWindSpeedChecked', false);
-
-
   }
+
+  onClick() {
+    const currTime = new Date();
+
+    /*this.weatherWeekService.getWeatherWeekData(this.cityName).subscribe(result => {
+      this.setDate(result);
+      console.log(result);
+    });*/
+
+    this.indexedDBService.getDataFromDB(this.cityName, 'WeekForecast').then((data) => {
+        let diffTime = currTime.getTime() - data.requestTime.getTime();
+        diffTime = Math.round(((diffTime % 86400000) % 3600000) / 60000);
+
+        if (diffTime < 15) {
+          this.weatherWeekData = this.getFinalData(data['weatherData'], this.days);
+        } else {
+          this.weatherWeekService.getWeatherWeekData(this.cityName).subscribe((dataFromAPI) => {
+              this.setDate(dataFromAPI);
+              this.indexedDBService.addDataToDB(this.cityName, dataFromAPI, currTime, 'WeekForecast');
+              this.weatherWeekData = this.getFinalData(dataFromAPI, this.days);
+            },
+            (err: HttpErrorResponse) => {
+              if (err.error instanceof Error) {
+                console.log('An error occurred:', err.error.message);
+              } else {
+                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+                this.httpError = `Oops! Something went wrong: ${err.error.message}`;
+              }
+            });
+        }
+      },
+      (err) => {
+        console.log(err);
+        this.weatherWeekService.getWeatherWeekData(this.cityName).subscribe((data) => {
+            this.setDate(data);
+            this.indexedDBService.addDataToDB(this.cityName, data, currTime, 'WeekForecast');
+            this.weatherWeekData = this.getFinalData(data, this.days);
+          },
+          (err: HttpErrorResponse) => {
+            if (err.error instanceof Error) {
+              console.log('An error occurred:', err.error.message);
+            } else {
+              console.log(`Backend returned code ${err.status}, body was: ${err.error.message}`);
+              this.httpError = `Oops! Something went wrong: ${err.error.message}`;
+            }
+          }
+        );
+      });
+  }
+
+  getFinalData(weatherData: WeatherWeek[], days: number) {
+    return weatherData.slice(0, days);
+  }
+
+  setDate(array) {
+    for (let i = 0; i < array.length; i++) {
+      let day = array[i]['date'].getDate() + i;
+      let month = array[i]['date'].getMonth();
+      let year = array[i]['date'].getFullYear();
+      array[i]['date'] = new Date(year, month, day);
+    }
+  }
+
+  /*dateDiffInDays(a, b) {
+
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY));
+  }*/
 
   onCityNameKeyUp(event) {
     this.cityName = event.target.value;
+    //console.log(this.cityName);
   }
 
   onDaysKeyUp(event) {
     this.days = event.target.value;
-  }
-
-  onClick() {
-    this.weatherWeekService.getWeatherWeekData(this.cityName, this.days)
-      .subscribe(results => {
-        // console.log(results.WeatherWeekService.parseWeatherWeekData());
-        console.log(results);
-      });
   }
 
   togglePropertyChecked(property: string) {

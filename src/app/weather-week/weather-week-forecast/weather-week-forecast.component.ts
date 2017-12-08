@@ -13,16 +13,16 @@ export class WeatherWeekForecastComponent implements OnInit {
 
   constructor(private localStorageService: LocalStorageService) { }
 
-  private humChecked = this.localStorageService.getItem('humChecked');
-  private pressChecked = this.localStorageService.getItem('pressChecked');
-  private dayTempChecked = this.localStorageService.getItem('dayTempChecked');
-  private nightTempChecked = this.localStorageService.getItem('nightTempChecked');
-  private maxDailyChecked = this.localStorageService.getItem('maxDailyChecked');
-  private minDailyChecked = this.localStorageService.getItem('minDailyChecked');
-  private mornTempChecked = this.localStorageService.getItem('mornTempChecked');
-  private eveTempChecked = this.localStorageService.getItem('eveTempChecked');
-  private windDirectionChecked = this.localStorageService.getItem('windDirectionChecked');
-  private windSpeedChecked = this.localStorageService.getItem('windSpeedChecked');
+  private humChecked = this.localStorageService.getItem('isHumChecked');
+  private pressChecked = this.localStorageService.getItem('isPressChecked');
+  private dayTempChecked = this.localStorageService.getItem('isDayTempChecked');
+  private nightTempChecked = this.localStorageService.getItem('isNightTempChecked');
+  private maxDailyChecked = this.localStorageService.getItem('isMaxDailyChecked');
+  private minDailyChecked = this.localStorageService.getItem('isMinDailyChecked');
+  private mornTempChecked = this.localStorageService.getItem('isMornTempChecked');
+  private eveTempChecked = this.localStorageService.getItem('isEveTempChecked');
+  private windDirectionChecked = this.localStorageService.getItem('isWindDirectionChecked');
+  private windSpeedChecked = this.localStorageService.getItem('isWindSpeedChecked');
 
   ngOnInit() {
   }

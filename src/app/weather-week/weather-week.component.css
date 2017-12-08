@@ -31,3 +31,11 @@
 .jumbotron {
   background-color: #FFFF00;
 }
+
+.container-header {
+  margin-top: 20px;
+}
+
+.breaker {
+  margin-top: 100px;
+}

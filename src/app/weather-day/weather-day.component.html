@@ -92,11 +92,17 @@
     </div>
   </form>
 </div>
-<div class="container" *ngIf="weatherDayData">
-  <div>
+
+<hr class="breaker" *ngIf="weatherDayData || httpError">
+
+<div class="container" *ngIf="weatherDayData || httpError">
+  <div class="container-header">
     <h3>Results:</h3>
+    <div *ngIf="httpError">
+      <span>{{httpError}}</span>
+    </div>
   </div>
-  <div class="card-group">
+  <div class="card-deck" *ngIf="weatherDayData && !httpError">
     <app-weather-day-forecast
       *ngFor="let weatherDay of weatherDayData"
       [cityName]="cityName"
