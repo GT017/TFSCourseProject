@@ -12,6 +12,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import {IndexedDBService} from './indexedDBService/indexed-db.service';
 import {LocalStorageService} from './localStorageService/local-storage.service';
+import { FilterComponent } from './filter/filter.component';
 
 
 
@@ -26,7 +27,7 @@ const ROUTES = [
   declarations: [
     AppComponent,
     NotFoundComponent,
-    HomePageComponent
+    HomePageComponent,
   ],
   imports: [
     BrowserModule,

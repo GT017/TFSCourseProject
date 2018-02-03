@@ -1,6 +1,8 @@
 /*@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";*/
 .navigation {
   margin-bottom: 10px;
+  background-color: black;
+  opacity: 0.75;
 }
 
 .nav-link {

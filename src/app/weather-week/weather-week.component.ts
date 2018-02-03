@@ -5,6 +5,7 @@ import {WeatherWeek} from './model/weather-week';
 import {LocalStorageService} from "../localStorageService/local-storage.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {IndexedDBService} from "../indexedDBService/indexed-db.service";
+import {IFilter} from "../filter/model/filter";
 
 const REGEXP = /^[1]?[0-9]$/;
 
@@ -20,16 +21,48 @@ export class WeatherWeekComponent implements OnInit {
   days: number;
   httpError: string;
 
-  private isHumChecked = false;
-  private isPressChecked = false;
-  private isDayTempChecked = false;
-  private isNightTempChecked = false;
-  private isMaxDailyChecked = false;
-  private isMinDailyChecked = false;
-  private isMornTempChecked = false;
-  private isEveTempChecked = false;
-  private isWindDirectionChecked = false;
-  private isWindSpeedChecked = false;
+  filters = [
+    {
+      title: 'Humidity',
+      marked: false
+    },
+    {
+      title: 'Pressure',
+      marked: false
+    },
+    {
+      title: 'Day temperature',
+      marked: false
+    },
+    {
+      title: 'Night temperature',
+      marked: false
+    },
+    {
+      title: 'Maximum daily temperature',
+      marked: false
+    },
+    {
+      title: 'Minimum daily temperature',
+      marked: false
+    },
+    {
+      title: 'Morning temperature',
+      marked: false
+    },
+    {
+      title: 'Evening temperature',
+      marked: false
+    },
+    {
+      title: 'Wind direction',
+      marked: false
+    },
+    {
+      title: 'Wind speed',
+      marked: false
+    }
+  ];
 
   constructor(private formBuilder: FormBuilder,
               private weatherWeekService: WeatherWeekService,
@@ -67,29 +100,13 @@ export class WeatherWeekComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       days: ['', [Validators.required, Validators.min(2), Validators.max(16), Validators.pattern(REGEXP)]]
     });
-
-    this.localStorageService.setItem('isHumChecked', false);
-    this.localStorageService.setItem('isPressChecked', false);
-    this.localStorageService.setItem('isDayTempChecked', false);
-    this.localStorageService.setItem('isNightTempChecked', false);
-    this.localStorageService.setItem('isMaxDailyChecked', false);
-    this.localStorageService.setItem('isMinDailyChecked', false);
-    this.localStorageService.setItem('isMornTempChecked', false);
-    this.localStorageService.setItem('isEveTempChecked', false);
-    this.localStorageService.setItem('isWindDirectionChecked', false);
-    this.localStorageService.setItem('isWindSpeedChecked', false);
   }
 
   onClick() {
     const currTime = new Date();
 
-    /*this.weatherWeekService.getWeatherWeekData(this.cityName).subscribe(result => {
-      this.setDate(result);
-      console.log(result);
-    });*/
-
     this.indexedDBService.getDataFromDB(this.cityName, 'WeekForecast').then((data) => {
-        let diffTime = currTime.getTime() - data.requestTime.getTime();
+        let diffTime = currTime.getTime() - data['requestTime'].getTime();
         diffTime = Math.round(((diffTime % 86400000) % 3600000) / 60000);
 
 
@@ -156,14 +173,13 @@ export class WeatherWeekComponent implements OnInit {
 
   onCityNameKeyUp(event) {
     this.cityName = event.target.value;
-    //console.log(this.cityName);
   }
 
   onDaysKeyUp(event) {
     this.days = event.target.value;
   }
 
-  togglePropertyChecked(property: string) {
+  /*togglePropertyChecked(property: string) {
     if (property === 'isHumChecked') {
       this.isHumChecked = !this.isHumChecked;
       this.localStorageService.setItem('isHumChecked', this.isHumChecked);
@@ -204,5 +220,10 @@ export class WeatherWeekComponent implements OnInit {
       this.isWindSpeedChecked = !this.isWindSpeedChecked;
       this.localStorageService.setItem('isWindSpeedChecked', this.isWindSpeedChecked);
     }
+  }*/
+
+  toggleProperty(filter: IFilter) {
+    filter.marked = !filter.marked;
+    this.localStorageService.setItem(filter.title, filter.marked);
   }
 }

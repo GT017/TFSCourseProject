@@ -2,5 +2,8 @@
 /*@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";*/
 
 body {
-  background-color: #B0E0E6;
+  /*background-color: #B0E0E6;*/
+  background: url("main.jpg") no-repeat;
+  /*http://www.1366x768.ru/macro/19/19-dozhd-na-stekle-makro-oboi-1366x768.jpg*/
+  background-size: cover;
 }

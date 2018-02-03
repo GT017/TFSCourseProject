@@ -5,6 +5,7 @@ import {WeatherDay} from './model/weather-day';
 import {LocalStorageService} from '../localStorageService/local-storage.service';
 import {IndexedDBService} from '../indexedDBService/indexed-db.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import {IFilter} from "../filter/model/filter";
 
 const REGEXP = /^[1-6]$/;
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -22,13 +23,38 @@ export class WeatherDayComponent implements OnInit {
   days: number;
   httpError: string;
 
-  private isHumidityChecked = false;
-  private  isPressureChecked = false;
-  private  isTempChecked = false;
-  private  isTempMaxChecked = false;
-  private  isTempMinChecked = false;
-  private  isWindDirChecked = false;
-  private  isWindSpChecked = false;
+  filters = [
+    {
+      title: 'Humidity',
+      marked: false
+    },
+    {
+      title: 'Pressure',
+      marked: false
+    },
+    {
+      title: 'Current temperature',
+      marked: false
+    },
+    {
+      title: 'Maximum daily temperature',
+      marked: false
+    },
+    {
+      title: 'Minimum daily temperature',
+      marked: false
+    },
+    {
+      title: 'Wind direction',
+      marked: false
+    },
+    {
+      title: 'Wind speed',
+      marked: false
+    }
+    ];
+
+
 
 
   constructor(private formBuilder: FormBuilder,
@@ -68,13 +94,7 @@ export class WeatherDayComponent implements OnInit {
       days: ['', [Validators.required, Validators.min(2), Validators.max(5), Validators.pattern(REGEXP)]]
     });
 
-    this.localStorageService.setItem('isHumidityChecked', false);
-    this.localStorageService.setItem('isPressureChecked', false);
-    this.localStorageService.setItem('isTempChecked', false);
-    this.localStorageService.setItem('isTempMaxChecked', false);
-    this.localStorageService.setItem('isTempMinChecked', false);
-    this.localStorageService.setItem('isWindDirChecked', false);
-    this.localStorageService.setItem('isWindSpChecked', false);
+
   }
 
   onClick() {
@@ -150,34 +170,8 @@ export class WeatherDayComponent implements OnInit {
     this.days = event.target.value;
   }
 
-  togglePropertyChecked(property: string) {
-    if (property === 'isHumidityChecked') {
-      this.isHumidityChecked = !this.isHumidityChecked;
-      this.localStorageService.setItem('isHumidityChecked', this.isHumidityChecked);
-    }
-    if (property === 'isPressureChecked') {
-      this.isPressureChecked = !this.isPressureChecked;
-      this.localStorageService.setItem('isPressureChecked', this.isPressureChecked);
-    }
-    if (property === 'isTempChecked') {
-      this.isTempChecked = !this.isTempChecked;
-      this.localStorageService.setItem('isTempChecked', this.isTempChecked);
-    }
-    if (property === 'isTempMaxChecked') {
-      this.isTempMaxChecked = !this.isTempMaxChecked;
-      this.localStorageService.setItem('isTempMaxChecked', this.isTempMaxChecked);
-    }
-    if (property === 'isTempMinChecked') {
-      this.isTempMinChecked = !this.isTempMinChecked;
-      this.localStorageService.setItem('isTempMinChecked', this.isTempMinChecked);
-    }
-    if (property === 'isWindDirChecked') {
-      this.isWindDirChecked = !this.isWindDirChecked;
-      this.localStorageService.setItem('isWindDirChecked', this.isWindDirChecked);
-    }
-    if (property === 'isWindSpChecked') {
-      this.isWindSpChecked = !this.isWindSpChecked;
-      this.localStorageService.setItem('isWindSpChecked', this.isWindSpChecked);
-    }
+  toggleProperty(filter: IFilter) {
+    filter.marked = !filter.marked;
+    this.localStorageService.setItem(filter.title, filter.marked);
   }
 }

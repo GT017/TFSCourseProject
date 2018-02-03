@@ -36,9 +36,16 @@
     </div>
 
     <div class="form-group">
-      <label for="day-properties">Select data:</label>
-      <div class="list-group" id="day-properties" >
-        <button type="button"
+      <label for="week-properties">Select data:</label>
+      <div class="list-group" id="week-properties" >
+
+        <app-filter *ngFor="let filt of filters"
+                    [filt]="filt"
+                    (click)="toggleProperty(filt)"
+        ></app-filter>
+
+
+        <!--<button type="button"
                 class="list-group-item"
                 [ngClass]="{'checked': isHumChecked}"
                 (click)="togglePropertyChecked('isHumChecked')">
@@ -97,7 +104,7 @@
                 [ngClass]="{'checked': isWindSpeedChecked}"
                 (click)="togglePropertyChecked('isWindSpeedChecked')">
           Wind speed
-        </button>
+        </button>-->
       </div>
     </div>
 

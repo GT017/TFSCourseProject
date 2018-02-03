@@ -6,8 +6,13 @@
   text-transform: uppercase;
 }
 
+.form-control {
+  opacity: 0.8;
+}
+
 .form-control.ng-invalid.ng-touched {
   border-color: #dc3545;
+
 }
 
 .form-control.ng-valid {
@@ -23,13 +28,8 @@
   display: none;
 }
 
-.checked {
-  background-color: #4169E1!important;
-  color: #FFFFFF!important;
-}
-
 .jumbotron {
-  background-color: #FFFF00;
+  opacity: 0.5;
 }
 
 .container-header {

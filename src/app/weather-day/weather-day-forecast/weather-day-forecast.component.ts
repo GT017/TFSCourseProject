@@ -12,6 +12,7 @@ export class WeatherDayForecastComponent implements OnInit {
 
   @Input() cityName;
   @Input() weatherDay;
+  @Input() filters;
 
   CityName = this.cityName;
 
